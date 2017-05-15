@@ -16,7 +16,7 @@ export default new class {
         throw new Error('create server moniter fail');
       }
 
-      return result;
+      return result.obj();
     } catch (err) {
       logger.error('controller.server.addServer.error', err);
       throw err;
