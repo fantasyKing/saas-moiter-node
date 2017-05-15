@@ -16,7 +16,7 @@ export default new class {
     for (const key of Object.keys(req.params)) {
       params[key] = req.params[key];
     }
-    if (method === 'GET') {
+    if (method === 'GET' || method === 'DELETE') {
       for (const key of Object.keys(req.query)) {
         params[key] = req.query[key];
       }

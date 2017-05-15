@@ -4,7 +4,8 @@
   "description": "a node moniter service rely on pm2",
   "main": "./src/index.js",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "start": "babel-node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -27,10 +28,11 @@
     "compression": "^1.6.1",
     "cors": "^2.7.1",
     "express": "^4.13.4",
+    "mongoose": "^4.9.9",
     "morgan": "^1.7.0",
     "request": "^2.72.0",
-    "validator": "^5.4.0",
-    "simple-logger": "github:fantasyKing/simple-logger"
+    "simple-logger": "github:fantasyKing/simple-logger",
+    "validator": "^5.4.0"
   },
   "devDependencies": {
     "ava": "^0.14.0",
