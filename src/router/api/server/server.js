@@ -40,7 +40,7 @@ export default new class extends Base {
     }
   }
 
-    /**
+  /**
    * 删除监控的server信息
    * @method DELETE
    * @url /server/delete
@@ -52,6 +52,24 @@ export default new class extends Base {
   server10002 = async (req, res, params) => {
     try {
       const result = await serverCtrl.deleteServer(params);
+      return this.ok(res, result);
+    } catch (err) {
+      return this.fail(res)(err);
+    }
+  }
+
+  /**
+   * 获取某个server具体信息
+   * @method DELETE
+   * @url /server/get-server-info
+   * @param req
+   * @param res
+   * @param params { id }
+   * @return {}
+   */
+  server10003 = async (req, res, params) => {
+    try {
+      const result = await serverCtrl.getById(params);
       return this.ok(res, result);
     } catch (err) {
       return this.fail(res)(err);

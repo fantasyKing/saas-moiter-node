@@ -46,12 +46,31 @@ test.skip('update', async t => {
   }
 });
 
-test('delete', async t => {
+test.skip('delete', async t => {
   const options = {
     method: 'DELETE',
     uri: 'http://localhost:6601/server/delete',
     qs: {
       id: '59191dc2e31a73286dfd1046'
+    },
+    json: true
+  };
+  try {
+    const result = await rq(options);
+    console.log('result', result);
+    t.truthy(result);
+  } catch (err) {
+    console.log('err', err);
+    t.false();
+  }
+});
+
+test('get', async t => {
+  const options = {
+    method: 'GET',
+    uri: 'http://localhost:6601/server/get-server-info',
+    qs: {
+      id: '591925352bfa8e2e5f7967dc'
     },
     json: true
   };

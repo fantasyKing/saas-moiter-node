@@ -72,4 +72,20 @@ export default new class {
       throw err;
     }
   }
+
+  async getById(params) {
+    try {
+      const { id } = params;
+
+      const result = await ServerModel.findOne({ _id: id }).exec();
+
+      if (!result) {
+        throw new Error(`not found ${id}`);
+      }
+      return result.obj();
+    } catch (err) {
+      logger.error('controller.server.getById.error', err);
+      throw err;
+    }
+  }
 };

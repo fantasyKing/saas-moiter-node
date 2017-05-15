@@ -15,5 +15,10 @@ export default [
     ['id'],
     [1],
     ['mongoid']
+  ],
+  ['GET', '/get-server-info', [], server.server10003,
+    ['id'],
+    [1],
+    ['mongoid']
   ]
 ];
