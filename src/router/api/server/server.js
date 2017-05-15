@@ -21,4 +21,22 @@ export default new class extends Base {
       return this.fail(res)(err);
     }
   }
+
+  /**
+   * 修改监控的server信息
+   * @method POST
+   * @url /server/update
+   * @param req
+   * @param res
+   * @param params { id, name, hosts, weight }
+   * @return {}
+   */
+  server10001 = async (req, res, params) => {
+    try {
+      const result = await serverCtrl.updateServer(params);
+      return this.ok(res, result);
+    } catch (err) {
+      return this.fail(res)(err);
+    }
+  }
 };
