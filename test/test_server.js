@@ -8,7 +8,8 @@ test.skip('add', async t => {
     body: {
       name: '58a526bf06dce3b7a6b6a784', // 1
       hosts: ['http://192.168.202.19:9601'], // 1
-      weight: 9
+      weight: 9,
+      _status: 1
     },
     json: true
   };
@@ -30,7 +31,8 @@ test('update', async t => {
       id: '59191b1229b57225481097fb',
       name: '58a526bf06dce3b7a6b6a784', // 1
       hosts: ['http://192.168.150.19:9601'], // 1
-      weight: 9
+      weight: 9,
+      _status: 0
     },
     json: true
   };
