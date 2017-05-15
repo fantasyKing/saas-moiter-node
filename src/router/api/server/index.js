@@ -10,5 +10,10 @@ export default [
     ['id', 'name', 'hosts', 'weight', '_status'],
     [1, 1, 0, 0, 1],
     ['mongoid', 'string', 'array', 'number', 'number']
+  ],
+  ['DELETE', '/delete', [], server.server10002,
+    ['id'],
+    [1],
+    ['mongoid']
   ]
 ];

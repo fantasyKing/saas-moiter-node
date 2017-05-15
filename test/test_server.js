@@ -23,7 +23,7 @@ test.skip('add', async t => {
   }
 });
 
-test('update', async t => {
+test.skip('update', async t => {
   const options = {
     method: 'POST',
     uri: 'http://localhost:6601/server/update',
@@ -33,6 +33,25 @@ test('update', async t => {
       hosts: ['http://192.168.150.19:9601'], // 1
       weight: 9,
       _status: 0
+    },
+    json: true
+  };
+  try {
+    const result = await rq(options);
+    console.log('result', result);
+    t.truthy(result);
+  } catch (err) {
+    console.log('err', err);
+    t.false();
+  }
+});
+
+test('delete', async t => {
+  const options = {
+    method: 'DELETE',
+    uri: 'http://localhost:6601/server/delete',
+    qs: {
+      id: '59191dc2e31a73286dfd1046'
     },
     json: true
   };

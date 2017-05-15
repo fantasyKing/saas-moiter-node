@@ -56,4 +56,20 @@ export default new class {
       throw err;
     }
   }
+
+  async deleteServer(params) {
+    try {
+      const { id } = params;
+
+      const result = await ServerModel.remove({ _id: id });
+
+      if (result.ok === 1) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      logger.error('controller.server.deleteServer.error', err);
+      throw err;
+    }
+  }
 };
