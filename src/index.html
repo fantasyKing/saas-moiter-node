@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>Connector tester</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <style media="screen">
+    #result {
+      width: 100%;
+      font-family: 'Lucida Console', Monaco, monospace;
+    }
+    #contentInput {
+      float: left;
+      width: calc(100% - 200px);
+    }
+
+    #eventSelector{
+      float: left;
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>V3 socket develop toolkit</h2>
+    <p>
+      Hint: You can also use the browser console.<br>
+      Enable debug mode by excute <code>localStorage.debug = '*';</code>
+    </p>
+    <h4>Status:</h4>
+    <span class="status"></span>
+    <h4>Authorization</h4>
+    <form id="authForm" class="form-inline" action="/" method="get">
+      <div class="form-group">
+        <label for="user_id">url</label>
+        <input id="url" type="input" class="form-control" name="url" value="">
+      </div>
+      <div class="form-group">
+        <label for="user_id">user_id</label>
+        <input id="user_id" type="input" class="form-control" name="user_id" value="57ba78eca8f6134934e17eb0">
+      </div>
+      <div class="form-group">
+        <label for="user_id">device_id</label>
+        <input id="device_id" type="input" class="form-control" name="device_id" value="86dc21e1-0742-498e-afb3-337523183fca">
+      </div>
+      <div class="form-group">
+        <label for="user_id">token</label>
+        <input id="token" type="input" class="form-control" name="token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNTdiYTc4ZWNhOGY2MTM0OTM0ZTE3ZWIwIiwiZGV2aWNlX2lkIjoiODZkYzIxZTEtMDc0Mi00OThlLWFmYjMtMzM3NTIzMTgzZmNhIiwidHMiOjE0NzQ5NDM4NDkwMzgsImFwcF9pZCI6IjU2YzZjMzA5MjQzY2I3MjgyMDVhM2RmZiIsImlhdCI6MTQ3NDk0Mzg0OX0.nouqgLkUGqpLH45E4opcpoH6ITK9NqhTibiCh-Un6A0">
+      </div>
+      <input class="btn" type="submit" name="name" value="connect">
+      <input id="disconnect_btn" type="button" name="name" class="btn" value="disconnect">
+    </form>
+    <hr>
+    <form id="submitForm" class="" action="/" method="get">
+      <select class="form-control" id="eventSelector" class="" name="">
+        <option value="M10000">M10000</option>
+        <option value="PING">PING</option>
+      </select>
+      <input class="form-control" id="contentInput" name="name" value='{"channel_id":"56d4481e7ebb20624f7545be","content":"example","media_type":-1,"message_type":0,"extend":{},"request_id":"fdsafda111"}'>
+      <input class="btn" type="submit" name="name" value="submit">
+    </form>
+    <p>
+      input should be a json, for example:
+    </p>
+    <p>
+      {"channel_id":"56d4481e7ebb20624f7545be","content":"example","media_type":1,"message_type":0,"extend":{},"request_id":"fdsafda111"}
+    </p>
+    <h4>result</h4>
+    <textarea id="result" name="name" rows="16" cols="40"></textarea>
+  </div>
+
+</body>
+
+<script src="/moniter/socket.io/socket.io.js"></script>
+<script src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.3.min.js"></script>
+<script>
+
+  var server = window.location.href;
+  //var server = 'http://192.168.100.150:4001';
+  var query = 'name=localhost'
+//  var server = "http://im-saas-dev.tinfinite.com/";
+  var socket = io(server, { transports: ['websocket'], path: '/moniter/socket.io', query: query} ).connect();
+
+  function showStatus(str) {
+    var sta = 'default'
+    console.log(str);
+    switch (str) {
+      case 'connected': {
+        sta = 'success'
+        break;
+      }
+      case 'reconnect_error':
+      case 'reconnect_failed':
+      case 'error':
+      case 'disconnect': {
+        sta = 'danger'
+        break;
+      }
+      case 'reconnect':
+      case 'reconnect_attempt':
+      case 'reconnecting': {
+        sta = 'warning'
+        break;
+      }
+      default:
+        sta = 'default'
+    }
+    str = '<span class="status label label-' + sta + '">' + str + '</span>'
+    $('.status').html(str);
+  }
+
+  bind_events(socket);
+
+  function bind_events(socket) {
+    socket.on('connect', function(e){
+      console.log(e);
+      if (socket.connected) {
+        showStatus('connected');
+      }
+    })
+    socket.on('error', function(e){
+      console.log(e);
+      showStatus('error');
+    })
+    socket.on('disconnect', function(e){
+      showStatus('disconnect');
+    })
+    socket.on('reconnect', function(e){
+      showStatus('reconnect');
+    })
+    socket.on('reconnect_attempt', function(e){
+      showStatus('reconnect_attempt');
+    })
+    socket.on('reconnecting', function(e){
+      showStatus('reconnecting');
+    })
+    socket.on('reconnect_error', function(e){
+      showStatus('reconnect_error');
+    })
+    socket.on('reconnect_failed', function(e){
+      showStatus('reconnect_failed');
+    })
+
+    socket.on('news', function(data){
+      console.log('news---->', data);
+
+      socket.emit('my other event', { 'test': 'test' })
+    });
+
+    socket.on('moniter-data', function(data){
+      console.log('moniter-data---->', data);
+    });
+
+    socket.on('M10000', function (data){
+      document.getElementById("result").value = 'M10000,'+JSON.stringify(data).toString() + '\n' + document.getElementById("result").value;
+      console.log(data);
+    });
+
+    socket.on('E10000', function (data){
+      document.getElementById("result").value = 'E10000,'+JSON.stringify(data).toString() + '\n' + document.getElementById("result").value;
+      console.log(data);
+    });
+
+    socket.on('M11000', function (data){
+      document.getElementById("result").value = 'M11000,'+JSON.stringify(data).toString() + '\n' + document.getElementById("result").value;
+      console.log(data);
+    });
+
+    socket.on('PING', function (data){
+      document.getElementById("result").value = 'PING,'+JSON.stringify(data).toString() + '\n' + document.getElementById("result").value;
+      console.log(data);
+    });
+  }
+
+
+  $(document).ready(function() {
+    $("#url").val(server);
+    $('#authForm').on('submit',function() {
+      socket.close();
+      var server =  $('#url').val();
+      console.log(server);
+      var query = 'user_id=' + $('#user_id').val() + '&device_id=' + $('#device_id').val() + '&token=' + $('#token').val();
+      socket = io(server ,{transports: ['websocket'], path: '/v3/socket.io',query: query}).connect($('#url').val());
+      bind_events(socket);
+      socket.connect();
+      return false;
+    });
+
+    $("#disconnect_btn").click(function(){
+      socket.close();
+    })
+
+    $('#submitForm').on('submit',function() {
+      try{
+        var content = JSON.parse($('#contentInput').val())
+      }catch(e){
+        alert($('#contentInput').val()+ ' is not a json');
+      }
+
+      socket.emit($('#eventSelector').val(), content,function(data){
+        console.log(data);
+      })
+      return false;
+    });
+  });
+</script>
+</html>

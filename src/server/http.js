@@ -60,6 +60,10 @@ class HTTP {
     this.app.use.apply(this.app, args);
   };
 
+  get = (...args) => {
+    this.app.get.apply(this.app, args);
+  }
+
   start = () => {
     this.use(this.notFoundHandler);
     this.use(this.errorLog);
@@ -70,8 +74,10 @@ class HTTP {
       console.log('http listen on', this.port);
       console.log('http run at env:', process.env.NODE_ENV);
     });
+
     process.on('SIGINT', () => {
       console.log('http exiting...');
+      process.exit();
       server.close(() => {
         console.log('http exited.');
         process.exit(0);
@@ -85,6 +91,8 @@ class HTTP {
     process.on('unhandledRejection', (reason, p) => {
       console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
     });
+
+    return server;
   }
 }
 
